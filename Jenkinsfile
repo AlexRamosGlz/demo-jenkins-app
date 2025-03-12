@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     stages {
-
-        agent {
-        docker {
-            image 'node:18-alpine'
-            reuseNode true
-        }
     }
         stage('Build') {
+        agent {
+            docker {
+                image 'node:18-alpine'
+                reuseNode true
+            }
             steps {
                 sh '''
             ls -la
@@ -25,13 +24,12 @@ pipeline {
         }
 
         stage('Test') {
-
             agent {
-        docker {
-            image 'node:18-alpine'
-            reuseNode true
-        }
-    }
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
             steps {
                 sh '''
                     echo "Testing..."
@@ -59,16 +57,16 @@ pipeline {
 
                     node_modules/serve -s build
                     sleep 10
-                    
+
                     npx playwright test
                 '''
             }
         }
-    }
+        }
 
-	post {
-		always {
-			junit 'test-results/junit.xml'			
-		}
-	}
+    post {
+        always {
+            junit 'test-results/junit.xml'
+        }
+    }
 }
