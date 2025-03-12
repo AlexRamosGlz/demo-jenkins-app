@@ -33,6 +33,20 @@ pipeline {
                 '''
             }
         }
+
+        stage('E2E Testing') {
+            steps {
+                sh '''
+                    echo "E2E Testing..."
+
+                    npm install serve
+
+                    node_modules/serve -s build
+                    
+                    npx playwright test
+                '''
+            }
+        }
     }
 
 	post {
