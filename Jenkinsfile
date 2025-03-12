@@ -2,13 +2,15 @@ pipeline {
     agent any
 
     stages {
-    }
         stage('Build') {
-        agent {
-            docker {
-                image 'node:18-alpine'
-                reuseNode true
-            }
+
+            agent {
+        docker {
+            image 'node:18-alpine'
+            reuseNode true
+        }
+    }
+
             steps {
                 sh '''
             ls -la
@@ -24,12 +26,14 @@ pipeline {
         }
 
         stage('Test') {
+
             agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
+        docker {
+            image 'node:18-alpine'
+            reuseNode true
+        }
+        
+        }
             steps {
                 sh '''
                     echo "Testing..."
@@ -44,7 +48,7 @@ pipeline {
         stage('E2E Testing') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    image 'mcr.microsoft.com/playwright:v1.51.0-noble'
                     reuseNode true
                 }
             }
@@ -57,16 +61,16 @@ pipeline {
 
                     node_modules/serve -s build
                     sleep 10
-
+                    
                     npx playwright test
                 '''
             }
         }
-        }
+    }
 
     post {
         always {
-            junit 'test-results/junit.xml'
+            junit 'test-results/junit.xml'            
         }
     }
 }
